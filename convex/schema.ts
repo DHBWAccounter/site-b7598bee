@@ -1,21 +1,11 @@
-import { defineSchema } from "convex/server";
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
 
+// Convex indexes are not unique by themselves.
+// Enforce uniqueness in mutations before inserts when required by the product rules.
 export default defineSchema({
-  waitlistSignups: {
-    email: {
-      type: "string",
-      description:
-        "The email address of the signup, stored in lowercase for case-insensitive duplicate detection.",
-    },
-    createdAt: {
-      type: "number",
-      description: "Unix timestamp in milliseconds when the signup was created.",
-    },
-  },
-  indexes: {
-    by_email: {
-      indexDescriptor: "by_email",
-      fields: ["email"],
-    },
-  },
+  waitlistSignups: defineTable({
+    email: v.string(),
+    createdAt: v.number(),
+  }).index("by_email", ["email"]),
 });
